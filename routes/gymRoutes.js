@@ -29,14 +29,16 @@ const axios = require("axios");
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { name, address, phone, latitude, longitude } = req.body;
-    const image = req.file ? req.file.path : "";
+
+    const image = req.file
+      ? `https://gymbackendv1.onrender.com/${req.file.path.replace(/\\/g, "/")}`
+      : "";
 
     const newGym = new Gym({
       name,
       address,
       phone,
       image,
-
       location: {
         type: "Point",
         coordinates: [longitude, latitude],
@@ -50,7 +52,6 @@ router.post("/", upload.single("image"), async (req, res) => {
       message: "Gym registered successfully",
       gym: newGym,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
