@@ -22,7 +22,7 @@ const upload = multer({
 const express = require("express");
 const router = express.Router();
 
-const Gym = require("../models/Gym");
+const Gym = require("../models/gym");
 const axios = require("axios");
 
 // POST API
