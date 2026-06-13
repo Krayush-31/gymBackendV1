@@ -1,26 +1,7 @@
-const multer = require("multer");
-const path = require("path");
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      Date.now() +
-        path.extname(file.originalname)
-    );
-  },
-});
-
-const upload = multer({
-  storage,
-});
-
 const express = require("express");
 const router = express.Router();
+
+const upload = require("../middleware/upload");
 
 const Gym = require("../models/gym");
 const axios = require("axios");
@@ -30,9 +11,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { name, address, phone, latitude, longitude } = req.body;
 
-    const image = req.file
-      ? `https://gymbackendv1.onrender.com/${req.file.path.replace(/\\/g, "/")}`
-      : "";
+    const image = req.file?.path || "";
 
     const newGym = new Gym({
       name,
@@ -52,7 +31,10 @@ router.post("/", upload.single("image"), async (req, res) => {
       message: "Gym registered successfully",
       gym: newGym,
     });
+
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,

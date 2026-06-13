@@ -13,16 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve uploaded images
-app.use(
-"/uploads",
-express.static(
-path.join(__dirname, "uploads")
-)
-);
-
+const authRoutes = require("./routes/authRoutes");
 // Routes
 app.use("/api/gyms", gymRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
 res.send("Backend Working");
